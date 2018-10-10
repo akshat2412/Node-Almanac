@@ -1,7 +1,8 @@
-import express from "express";
+import express, {Request, Response} from "express";
 import * as bodyParser from "body-parser";
 import path from "path";
 import morgan from "morgan";
+import {NotificationsRouter} from "./Routes/NotificationsRouter"
 
 
 class App {
@@ -9,10 +10,11 @@ class App {
 
     constructor() {
         this.app = express();
-        this.config();       
+        this.Config();      
+        this.SetRoutes(); 
     }
 
-    private config(): void{
+    private Config(): void{
         // support application/json type post data
         this.app.use(bodyParser.json());
 
@@ -29,6 +31,13 @@ class App {
         // Add view path and view engine
         this.app.set('views', path.join(__dirname, '/Views'));
         this.app.set('view engine', 'ejs');
+    }
+
+    private SetRoutes(): void{
+        this.app.get('/', (req: Request, res: Response) => {
+            res.render('Landing');
+        });
+        this.app.use('/notifications', NotificationsRouter);
     }
 }
 
